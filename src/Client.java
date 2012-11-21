@@ -1,7 +1,9 @@
 
+
+
 public class Client {
 	public static void main(String args[]){		
-		long t1 =System.currentTimeMillis()+1550;
+		long t1 =System.currentTimeMillis()+1650;
 		Kattio io = new Kattio(System.in,System.out);
 
 		int N = io.getInt();
@@ -16,16 +18,22 @@ public class Client {
 //		io.println("greedy tour");
 		int mstDist=tourLength(distances,tour);
 
-		boolean improved = true;
-		while(improved&&System.currentTimeMillis()<t1){
-			improved =swapOpt(tour,distances);
-		}
+//		boolean improved = true;
+//		while(improved&&System.currentTimeMillis()<t1){
+//			improved =swapOpt(tour,distances);
+//		}
 		
 //		int[] tour2= greedyTour(distances, N);
 //		int greedDist=tourLength(distances,tour2);
 //		if(mstDist>greedDist){
 //			tour=tour2;
 //		}
+		boolean improved = true;
+		while(improved&&System.currentTimeMillis()<t1){
+			improved =twoOpt(tour,distances);
+		}
+		
+	
 		for(int i=0;i<N;i++){
 			io.println(tour[i]);
 			
@@ -58,7 +66,7 @@ public class Client {
 	public static boolean swapIfBetter(int[] tour,int[][] dist,int from,int to){
 //		System.out.println("before "+tourLength(dist,tour));
 		//calculate local distance before
-		System.out.println(tourLength(dist,tour));
+//		System.out.println(tourLength(dist,tour));
 		int before=adistance(from, tour,dist)+adistance(to, tour,dist);
 		swap(tour, from,to);
 		//calculate local distance after
@@ -69,13 +77,66 @@ public class Client {
 //			System.out.println("after "+tourLength(dist,tour));
 			return false;
 		} else {
-			System.out.println(before+" swapped "+after);
-			System.out.println(tourLength(dist,tour));
+//			System.out.println(before+" swapped "+after);
+//			System.out.println(tourLength(dist,tour));
 //			System.out.println("after "+tourLength(dist,tour));
 			return true;
 		}
 		
 	}
+	
+	/**
+	 * can handle if from or to has gone beyond the edge once
+	 * @param dist
+	 * @param from
+	 * @param to
+	 * @param n
+	 * @return
+	 */
+	public static int distanceHelp(int[] tour,int[][] dist,int from ,int to){
+		int n=tour.length;
+		
+		if(from<0){
+//			System.out.println("converting index (from) "+from+" to index "+(n+from));
+			from=n+from;
+		}
+//		if(to<0){
+//			System.out.println("converting index "+to+" to index "+(n+to));
+//			to=n+to;
+//		}
+//		if(from>=n){
+//			from=from-n;
+//		}
+		if(to>=n){
+//			System.out.println("converting index (to) "+to+" to index "+(to-n));
+			to=to-n;
+		}
+		
+		return dist[tour[from]][tour[to]];
+		
+	}
+	
+	public static boolean swapIfBetterTwoOpt(int[] tour,int[][] dist,int from,int to){
+//		System.out.println("before "+tourLength(dist,tour));
+		//calculate local distance before
+		int before=distanceHelp(tour,dist,from-1,from)+distanceHelp(tour,dist,to,to+1);
+//		System.out.println("before edges "+new Point(from-1,from)+" , "+new Point(to,to+1));
+		swap(tour, from,to);
+		//calculate local distance after
+		int after=distanceHelp(tour,dist,from-1,from)+distanceHelp(tour,dist,to,to+1);
+		//swap back if no improvement
+		if(before<=after){
+			swap(tour, from,to);
+			return false;
+		} else {
+//			System.out.println(before+" swapped "+after);
+			
+//			System.out.println("after "+tourLength(dist,tour));
+			return true;
+		}
+		
+	}
+	
 	
 	public static void swap(int[] arr, int from, int to){
 		int tmp=arr[from];
@@ -104,6 +165,7 @@ public class Client {
 		distance=distance+dist[tour[from]][tour[to]];
 		return distance;
 	}
+	
 	
 //	GreedyTour
 //	   tour[0] = 0
@@ -147,6 +209,64 @@ public class Client {
 		return tour;
 	}
 	
+	public static boolean twoOpt(int[] tour,int[][] dist){
+		boolean better=false;
+		for(int current=0;current<tour.length;current++){
+			int nextVerticeIndex=(current+1)%tour.length;
+			
+			
+			int swapWith=(current+2)%tour.length;
+			
+			
+			
+			for(int iters=0;iters<tour.length-3;iters++){
+				//check if edge to swapwith is better than edge from current to next
+				if(dist[current][swapWith]<dist[current][nextVerticeIndex]){
+//					System.out.println("before " +tourLength(dist,tour));
+					//check if second swap really was better
+					if(swapIfBetterTwoOpt(tour,dist,nextVerticeIndex,swapWith)){
+						//it was better so complete the reversing
+						int innerFrom=(nextVerticeIndex+1)%tour.length;
+						int innerTo= swapWith==0 ? tour.length-1 : swapWith-1; 
+						reverse(tour, innerFrom, innerTo);
+//						System.out.println("after " +tourLength(dist,tour));
+						better=true;
+					}
+					
+					
+				}
+				
+				
+				swapWith++;if(swapWith>=tour.length){ swapWith=0; }
+			}
+		}
+		return better;
+	}
+	
+	
+	
+	/**
+	 * reverse, even if the interval goes over the edge
+	 * @param arr
+	 * @param from
+	 * @param to
+	 */
+	public static void reverse(int[] arr, int from, int to){
+		int iters=0;
+		if(from>to){
+			iters=((arr.length-from)+to+1)/2;
+		} else {
+			iters=(to-from+1)/2;
+		}
+		
+		while(iters>0){
+			swap(arr,from,to);
+			iters--;
+			if(++from>=arr.length){ from=0; }
+			if(--to<0){ to=arr.length-1; }
+		}
+	}
+	
 	private static int[][] calculateDistances(double[][] points,int N) {
 		int[][] distanceMatrix= new int[N][N];
 		for(int i=0; i<N;i++){
@@ -157,7 +277,20 @@ public class Client {
 		}
 		return distanceMatrix;
 	}
-	
+
+	public int getVertice(int[] arr,int index){
+		index=mod2(index,arr.length);
+		return arr[index];
+	}
+	//FROM INTERNET
+	public static int mod2(int x,int n){
+		int r = x % n;
+		if (r < 0)
+		{
+		    r += n;
+		}
+		return r;
+	}
 	
 	private static int distance(double x1, double x2,double y1,double y2){
 		double dx= x1-x2;
