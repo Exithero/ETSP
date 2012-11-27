@@ -22,8 +22,12 @@ public class Help {
 		while(iters>0){
 			swap(arr,from,to);
 			iters--;
-			if(++from>=arr.length){ from=0; }//increment with wraparound
-			if(--to<0){ to=arr.length-1; }//decrement with wraparound
+			//update indexes
+			from++;
+			to--;
+			//check for wrap around
+			if(from>=arr.length){ from=0; }//increment with wraparound
+			if(to<0){ to=arr.length-1; }//decrement with wraparound
 		}
 	}
 	

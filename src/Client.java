@@ -5,18 +5,18 @@ import java.util.Arrays;
 
 public class Client {
 	public static void main(String args[]){		
-		long t1 =System.currentTimeMillis()+1650000;
+		long t1 =System.currentTimeMillis()+1650;
 		Kattio io = new Kattio(System.in,System.out);
-//		int N = io.getInt();
-//		double[][] points= new double[2][N];
-//		for(int i=0;i<N;i++){
-//			points[0][i]=io.getDouble();
-//			points[1][i]=io.getDouble();
-//		}
+		int N = io.getInt();
+		double[][] points= new double[2][N];
+		for(int i=0;i<N;i++){
+			points[0][i]=io.getDouble();
+			points[1][i]=io.getDouble();
+		}
 		
 		//read test data from http://www.tsp.gatech.edu/vlsi/page2.html
-		double[][] points=readOtherData(io);
-		int N=points[0].length;
+//		double[][] points=readOtherData(io);
+//		int N=points[0].length;
 		
 		
 		
@@ -75,9 +75,9 @@ public class Client {
 		for(int i=0;i<N;i++){
 			io.println(tour2[i]);
 		}
-		io.println("2Opt Count: "+count);
-		io.println("MST tour length "+tsp.pathDistance());
-		io.println("Points given: "+score*50);
+//		io.println("2Opt Count: "+count);
+//		io.println("MST tour length "+tsp.pathDistance());
+//		io.println("Points given: "+score*50);
 		io.flush();
 		io.close();
 		
@@ -109,14 +109,10 @@ public class Client {
 		
 		//read until reached the EOF line
 		while(!(tmp=io.readLine()).equals("EOF")){
-//			System.out.println(tmp);
 			String sarr[]=tmp.split(" ");
-//			System.out.println(Arrays.toString(sarr));
 			
 			//try to read the dimension
 			if(points==null && sarr[0].equals("DIMENSION")){
-//				System.out.println(tmp);
-//				System.out.println(Arrays.toString(sarr));
 				N = Integer.parseInt(sarr[2]);
 				points = new double[2][N];
 			}
@@ -130,7 +126,7 @@ public class Client {
 					points[0][a-1]=b;
 					points[1][a-1]=c;
 				} catch(Exception e){
-					
+					//ignore
 				}
 			}
 		}

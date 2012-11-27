@@ -71,9 +71,6 @@ public class MinimumSpanningTree {
 				vNew.add(e.to);
 				eNew.add(e);
 			}
-			
-			
-			
 		}
 		
 		return eNew;
