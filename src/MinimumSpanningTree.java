@@ -118,8 +118,8 @@ public class MinimumSpanningTree {
 		if(visited[current]){ return; }
 		doublePath.add(current);
 		visited[current]=true;
-		for(int i=0;i<ug.edges[current].length;i++){
-			int to=ug.edges[current][i];
+		for(int i=0;i<ug.dist[current].length;i++){
+			int to=ug.dist[current][i];
 			if(!visited[to]){
 				doubleWalk(to,visited, ug, doublePath);//add going down
 				doublePath.add(current);//add going up

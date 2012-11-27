@@ -1,55 +1,159 @@
+import java.util.Arrays;
+
 
 
 
 public class Client {
 	public static void main(String args[]){		
-		long t1 =System.currentTimeMillis()+1650;
+		long t1 =System.currentTimeMillis()+1650000;
 		Kattio io = new Kattio(System.in,System.out);
-
-		int N = io.getInt();
+//		int N = io.getInt();
+//		double[][] points= new double[2][N];
+//		for(int i=0;i<N;i++){
+//			points[0][i]=io.getDouble();
+//			points[1][i]=io.getDouble();
+//		}
+		
+		//read test data from http://www.tsp.gatech.edu/vlsi/page2.html
+		double[][] points=readOtherData(io);
+		int N=points[0].length;
+		
+		
+		
+		UndirectedGraph ug=new UndirectedGraph(points,N);
+		SortedEdges se=new SortedEdges(ug);
+		Path tour1= new Path(ug);
+		TSP_Tour tsp=new TSP_Tour(ug,se,tour1);
+		tsp.setGreedyTour();
+		int naive=tsp.pathDistance();
+//		tsp.twoOpt();
+//		ug.twoOptTimed(t1);
+//		ug.twoOptAnnelingTimed(t1);
+	
+		
+		
+//		int[][] distances =calculateDistances(points,N);
+////		int[] tour=greedyTour(distances,N);
+//		int[] tour= MinimumSpanningTree.solve(distances, N);
+////		io.println("greedy tour");
+//		int mstDist=tourLength(distances,tour);
+//
+////		boolean improved = true;
+////		while(improved&&System.currentTimeMillis()<t1){
+////			improved =swapOpt(tour,distances);
+////		}
+//		
+////		int[] tour2= greedyTour(distances, N);
+////		int greedDist=tourLength(distances,tour2);
+////		if(mstDist>greedDist){
+////			tour=tour2;
+////		}
+		boolean improved = true;
+		int count=0;
+		while(improved&&System.currentTimeMillis()<t1){
+			count++;
+			improved =tsp.twoOpt();
+		}
+		int[] tour2=tsp.getPathCopy();
+		int OptPoint=tsp.pathDistance();
+		int optimal=3558;
+		double score=(OptPoint-optimal);
+		score=score/(double)(naive-optimal);
+		score= Math.pow(0.02d, score);
+		
+//		
+//	
+//		
+//		
+////		io.println("greedyTour length "+tourLength(distances,tour));
+//////		io.println("MST tour");
+////		for(int i=0;i<N;i++){
+////			io.println(superTour[i]);
+////		}
+		
+		
+		for(int i=0;i<N;i++){
+			io.println(tour2[i]);
+		}
+		io.println("2Opt Count: "+count);
+		io.println("MST tour length "+tsp.pathDistance());
+		io.println("Points given: "+score*50);
+		io.flush();
+		io.close();
+		
+		
+			
+		
+	}
+	
+	public static double[][] readPoints(Kattio io, int N){
+//		int N = io.getInt();
 		double[][] points= new double[2][N];
 		for(int i=0;i<N;i++){
 			points[0][i]=io.getDouble();
 			points[1][i]=io.getDouble();
 		}
-		int[][] distances =calculateDistances(points,N);
-//		int[] tour=greedyTour(distances,N);
-		int[] tour= MinimumSpanningTree.solve(distances, N);
-//		io.println("greedy tour");
-		int mstDist=tourLength(distances,tour);
-
-//		boolean improved = true;
-//		while(improved&&System.currentTimeMillis()<t1){
-//			improved =swapOpt(tour,distances);
-//		}
-		
-//		int[] tour2= greedyTour(distances, N);
-//		int greedDist=tourLength(distances,tour2);
-//		if(mstDist>greedDist){
-//			tour=tour2;
-//		}
-		boolean improved = true;
-		while(improved&&System.currentTimeMillis()<t1){
-			improved =twoOpt(tour,distances);
-		}
-		
-	
-		for(int i=0;i<N;i++){
-			io.println(tour[i]);
-			
-		}
-		
-//		io.println("greedyTour length "+tourLength(distances,tour));
-////		io.println("MST tour");
-//		for(int i=0;i<N;i++){
-//			io.println(superTour[i]);
-//		}
-////		io.println("MST tour length "+tourLength(distances,superTour));
-		io.flush();
-		io.close();
-			
-		
+		return points;
 	}
+	
+	
+	/**
+	 * read data points from http://www.tsp.gatech.edu/vlsi/page5.html
+	 * @param io
+	 * @return
+	 */
+	public static double[][] readOtherData(Kattio io){
+		String tmp;
+		double[][] points=null;
+		int N=0;
+		
+		//read until reached the EOF line
+		while(!(tmp=io.readLine()).equals("EOF")){
+//			System.out.println(tmp);
+			String sarr[]=tmp.split(" ");
+//			System.out.println(Arrays.toString(sarr));
+			
+			//try to read the dimension
+			if(points==null && sarr[0].equals("DIMENSION")){
+//				System.out.println(tmp);
+//				System.out.println(Arrays.toString(sarr));
+				N = Integer.parseInt(sarr[2]);
+				points = new double[2][N];
+			}
+			
+			//try to read
+			if(points!=null){
+				try{
+					int a=Integer.parseInt(sarr[0]);
+					int b=Integer.parseInt(sarr[1]);
+					int c=Integer.parseInt(sarr[2]);
+					points[0][a-1]=b;
+					points[1][a-1]=c;
+				} catch(Exception e){
+					
+				}
+			}
+		}
+		return points;
+	}
+	
+	public void printArray(double[][] arr){
+		System.out.println("[");
+		for(int i=0;i<arr.length;i++){
+			System.out.println(Arrays.toString(arr[i]));
+		}
+		System.out.println("]");
+	}
+	
+	public static void printArray(int[][] arr){
+		System.out.println("[");
+		for(int i=0;i<arr.length;i++){
+			System.out.println(Arrays.toString(arr[i]));
+		}
+		System.out.println("]");
+	}
+	
+	
 	public static boolean swapOpt(int tour[],int[][] dist){
 		boolean improved=false;
 		//			System.out.println("improving!");
@@ -210,14 +314,12 @@ public class Client {
 	}
 	
 	public static boolean twoOpt(int[] tour,int[][] dist){
+		
 		boolean better=false;
 		for(int current=0;current<tour.length;current++){
+			
 			int nextVerticeIndex=(current+1)%tour.length;
-			
-			
 			int swapWith=(current+2)%tour.length;
-			
-			
 			
 			for(int iters=0;iters<tour.length-3;iters++){
 				//check if edge to swapwith is better than edge from current to next
@@ -272,6 +374,23 @@ public class Client {
 		for(int i=0; i<N;i++){
 			for(int j=0;j<N;j++){
 				distanceMatrix[i][j]=distance(points[0][i],points[0][j],points[1][i],points[1][j]);
+			}
+		}
+		return distanceMatrix;
+	}
+	
+	private static int[][] calculateDistances2(double[][] points,int N) {
+		int[][] distanceMatrix= new int[N][N];
+		for(int i=0; i<N;i++){
+			for(int j=0;j<N;j++){
+				if(j==i){
+					distanceMatrix[i][j]=0;
+				} else if(i<j){
+					distanceMatrix[i][j]=distance(points[0][i],points[0][j],points[1][i],points[1][j]);
+				} else {//i>j
+					distanceMatrix[i][j]=distanceMatrix[j][i];
+				}
+				
 			}
 		
 		}
