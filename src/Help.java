@@ -36,7 +36,25 @@ public class Help {
 		arr[from]=arr[to];
 		arr[to]=tmp;
 	}
-	
-	
+
+	//FROM INTERNET
+	public static int mod2(int x,int n){
+		int r = x % n;
+		if (r < 0)
+		{
+			r += n;
+		}
+		return r;
+	}
+	public static int indexInArray(int[] arr,int number){
+		for(int i=0;i<arr.length;i++){
+			if(arr[i]==number){
+				return i;
+			}
+		}
+		return -1;
+	}
+
+
 
 }

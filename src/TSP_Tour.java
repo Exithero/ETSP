@@ -1,4 +1,4 @@
-import java.util.Arrays;
+
 import java.util.Random;
 
 
@@ -78,48 +78,102 @@ public class TSP_Tour {
 	}
 	
 	
-	public boolean twoOpt(){
+	public boolean twoOpt555(){
 		int pathLength=tour.length();
 		
 		boolean better=false;
-		for(int current=0;current<pathLength;current++){
-			int nextVerticeIndex=(current+1)%pathLength;
+		for(int currentVerticeIndex=0; currentVerticeIndex<pathLength;currentVerticeIndex++){
+			int nextVerticeIndex=(currentVerticeIndex+1)%pathLength;
 			//skip the current and the nextVerticeIndex
-			int swapWith=(current+2)%pathLength;
+			int toVerticeIndex=(currentVerticeIndex+2)%pathLength;
 			
-			int distOldEdge=ug.dist(current,nextVerticeIndex);
+			int distOldEdge=tour.indexDistance(currentVerticeIndex, nextVerticeIndex);/*ug.dist(current,nextVerticeIndex);*/
 			
 			//goes through all other edges
 			for(int iters=0;iters<pathLength-3;iters++){
 				
-				int distNewEdge=ug.dist(current,swapWith);
+				int distNewEdge=tour.indexDistance(currentVerticeIndex,toVerticeIndex);/*ug.dist(current,swapWith);*/
 				//check if edge to swapwith is better than edge from current to next
 				if(distNewEdge < distOldEdge ){
 //					System.out.println("before " +tourLength(dist,tour));
 					//check if second edge swap if it really is an improvement
-					if(swapIfBetterTwoOpt(nextVerticeIndex,swapWith)){
+					if(swapIfBetterTwoOpt(nextVerticeIndex,toVerticeIndex)){
 						//it was better so complete the reversing
 						int innerFrom=(nextVerticeIndex+1)%pathLength;
-						int innerTo= swapWith==0 ? pathLength-1 : swapWith-1; 
+						int innerTo= toVerticeIndex==0 ? pathLength-1 : toVerticeIndex-1; 
 //						reverse(path, innerFrom, innerTo);
 						tour.reverseSubPath(innerFrom, innerTo);
 //						System.out.println("after " +tourLength(dist,tour));
 						better=true;
-						
-						
-						//go back one step
 					}
 					
 					
 				}
 				
 				//increment the index, but do a wraparound if it reaches the end
-				swapWith++;if(swapWith>=pathLength){ swapWith=0; }
+				toVerticeIndex++; if(toVerticeIndex>=pathLength){ toVerticeIndex=0; }
 			}
+			
 		}
 		return better;
 	}
 	
+	public boolean twoOpt(){
+		int pathLength=tour.length();
+		
+		boolean better=false;
+		for(int currentVerticeIndex=0; currentVerticeIndex<pathLength;currentVerticeIndex++){
+			int nextVerticeIndex=(currentVerticeIndex+1)%pathLength;
+			int previousVerticeIndex=Help.mod2(currentVerticeIndex-1, pathLength);
+//			int distOldEdge=ug.dist(current,nextVerticeIndex);
+			int distOldEdge=tour.indexDistance(currentVerticeIndex, nextVerticeIndex);
+			
+			//goes the edges in sorted order
+			for(int iters=0;iters<pathLength;iters++){
+				//want index in path instead
+				int toVertice=se.getXNeighbor(currentVerticeIndex, iters);
+				
+				if(toVertice!=tour.getVertice(currentVerticeIndex) && 
+						toVertice!=tour.getVertice(previousVerticeIndex) &&
+								toVertice!=tour.getVertice(nextVerticeIndex)){
+//					System.out.println("swapcandidate2: "+current+" "+swapWith);
+//					int distNewEdge=ug.dist(current,swapWithIndexInPath);
+//					int distNewEdge=tour.indexDistance(current,swapWithIndexInPath);
+					int distNewEdge=ug.dist(tour.getVertice(currentVerticeIndex), toVertice);
+					
+//					System.out.println("dist2 " +distOldEdge+" "+distNewEdge);
+					//check if edge to swapwith is better than edge from current to next
+					if(distNewEdge < distOldEdge ){
+						int swapWithIndexInPath=Help.indexInArray(tour.path, toVertice);
+						
+//						System.out.println("before " +tourLength(dist,tour));
+						//check if second edge swap if it really is an improvement
+						if(swapIfBetterTwoOpt(nextVerticeIndex,swapWithIndexInPath)){
+							//it was better so complete the reversing
+							int innerFrom=(nextVerticeIndex+1)%pathLength;
+							int innerTo= swapWithIndexInPath==0 ? pathLength-1 : swapWithIndexInPath-1; 
+//							reverse(path, innerFrom, innerTo);
+							tour.reverseSubPath(innerFrom, innerTo);
+//							System.out.println("after " +tourLength(dist,tour));
+							better=true;
+						}
+						
+						
+					}
+				}
+				
+				
+			}
+			
+		}
+		return better;
+	}
+	
+	
+	public boolean threeOpt(){
+		boolean better=false;
+		return  better;
+	}
 	
 
 	
@@ -144,17 +198,23 @@ public class TSP_Tour {
 		}
 	}
 	
-	public boolean swapIfBetterTwoOpt(int from,int to){
+	/**
+	 * fromindex and toindex should be in the swap intervall
+	 * @param fromIndex
+	 * @param toIndex
+	 * @return
+	 */
+	public boolean swapIfBetterTwoOpt(int fromIndex,int toIndex){
 //		System.out.println("before "+tourLength(dist,tour));
 		//calculate local distance before
-		int before = tour.pathDistDirection(from, -1) + tour.pathDistDirection(to, +1);
+		int before = tour.pathDistDirection(fromIndex, -1) + tour.pathDistDirection(toIndex, +1);
 //		System.out.println("before edges "+new Point(from-1,from)+" , "+new Point(to,to+1));
-		tour.swap(from,to);
+		tour.swap(fromIndex,toIndex);
 		//calculate local distance after
-		int after = tour.pathDistDirection(from, -1) + tour.pathDistDirection(to, +1);
+		int after = tour.pathDistDirection(fromIndex, -1) + tour.pathDistDirection(toIndex, +1);
 		//swap back if no improvement
 		if(before<=after){
-			tour.swap(from,to);
+			tour.swap(fromIndex,toIndex);
 			return false;
 		} else {
 //			System.out.println(before+" swapped "+after);

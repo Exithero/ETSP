@@ -4,19 +4,36 @@ import java.util.Arrays;
 
 
 public class Client {
+	public final static boolean debug=true;
+	public final static boolean plainRead=true;
+	
 	public static void main(String args[]){		
 		long t1 =System.currentTimeMillis()+1650;
 		Kattio io = new Kattio(System.in,System.out);
-		int N = io.getInt();
-		double[][] points= new double[2][N];
-		for(int i=0;i<N;i++){
-			points[0][i]=io.getDouble();
-			points[1][i]=io.getDouble();
+		
+		double[][] points;
+		int N;
+		
+		if(debug){
+			t1=t1+1000000;
 		}
 		
-		//read test data from http://www.tsp.gatech.edu/vlsi/page2.html
-//		double[][] points=readOtherData(io);
-//		int N=points[0].length;
+		if(!plainRead){
+			//read test data from http://www.tsp.gatech.edu/vlsi/page2.html
+			points=readOtherData(io);
+			N=points[0].length;
+		} else {//plainRead
+			N = io.getInt();
+			points= new double[2][N];
+			for(int i=0;i<N;i++){
+				points[0][i]=io.getDouble();
+				points[1][i]=io.getDouble();
+			}
+		}
+		
+//		
+		
+		
 		
 		
 		
@@ -55,11 +72,7 @@ public class Client {
 			improved =tsp.twoOpt();
 		}
 		int[] tour2=tsp.getPathCopy();
-		int OptPoint=tsp.pathDistance();
-		int optimal=3558;
-		double score=(OptPoint-optimal);
-		score=score/(double)(naive-optimal);
-		score= Math.pow(0.02d, score);
+		
 		
 //		
 //	
@@ -75,9 +88,18 @@ public class Client {
 		for(int i=0;i<N;i++){
 			io.println(tour2[i]);
 		}
-//		io.println("2Opt Count: "+count);
-//		io.println("MST tour length "+tsp.pathDistance());
-//		io.println("Points given: "+score*50);
+		
+		if(debug){
+			int OptPoint=tsp.pathDistance();
+			int optimal=3558;
+			double score=(OptPoint-optimal);
+			score=score/(double)(naive-optimal);
+			score= Math.pow(0.02d, score);
+			
+			io.println("2Opt Count: "+count);
+			io.println("MST tour length "+tsp.pathDistance());
+			io.println("Points given: "+score*50);
+		}
 		io.flush();
 		io.close();
 		

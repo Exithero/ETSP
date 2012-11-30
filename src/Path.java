@@ -14,15 +14,15 @@ public class Path {
 	}
 	/**
 	 * direction should be +1 or -1, this is not checked
-	 * @param vertice
+	 * @param verticeIndex
 	 * @param direction
 	 * @return
 	 */
-	public int pathDistDirection(int vertice, int direction){
+	public int pathDistDirection(int verticeIndex, int direction){
 		//it dosen't matter in this case which is to and which is from because 
 		//the graph is undirected
-		int a = path[vertice];
-		int b = path[circleIndex(vertice + direction, path.length)];
+		int a = path[verticeIndex];
+		int b = path[circleIndex(verticeIndex + direction, path.length)];
 		return ug.dist(a,b);
 	}
 	/**
@@ -59,6 +59,10 @@ public class Path {
 		Help.swap(path, from, to);
 	}
 	
+	public int indexDistance(int from,int to){
+		return ug.dist(path[from], path[to]);
+	}
+	
 
 	
 	public int pathDistance(){
@@ -80,6 +84,10 @@ public class Path {
 		}
 		distance=distance+ug.dist(tour[tour.length-1],tour[0]);
 		return distance;
+	}
+	
+	public int getVertice(int index){
+		return path[index];
 	}
 
 	
