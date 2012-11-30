@@ -12,7 +12,6 @@ public class TSP_Tour {
 		this.se=se;
 		this.tour=tour;
 		this.rand= new Random();
-		
 	}
 	
 
@@ -34,6 +33,16 @@ public class TSP_Tour {
 			used[best]=true;
 		}
 		return tour;
+	}
+	
+	public void setRandomTour(){
+		tour.setPath(randomTour(ug,rand));
+	}
+	
+	private static int[] randomTour(UndirectedGraph ug, Random rand){
+		int arr[] =Help.indexFilledArray(ug.vertices);
+		Help.randomShuffle(arr, rand);
+		return arr;
 	}
 	
 	public int pathDistance(){
@@ -128,6 +137,8 @@ public class TSP_Tour {
 //			int distOldEdge=ug.dist(current,nextVerticeIndex);
 			int distOldEdge=tour.indexDistance(currentVerticeIndex, nextVerticeIndex);
 			
+			
+			boolean gah=false;
 			//goes the edges in sorted order
 			for(int iters=0;iters<pathLength;iters++){
 				//want index in path instead
@@ -141,9 +152,19 @@ public class TSP_Tour {
 //					int distNewEdge=tour.indexDistance(current,swapWithIndexInPath);
 					int distNewEdge=ug.dist(tour.getVertice(currentVerticeIndex), toVertice);
 					
+					if(distNewEdge >= distOldEdge){
+						gah=true;;
+					}
+					
 //					System.out.println("dist2 " +distOldEdge+" "+distNewEdge);
 					//check if edge to swapwith is better than edge from current to next
 					if(distNewEdge < distOldEdge ){
+						if(gah==true){
+							System.out.println("WTF! previous distance: "+distOldEdge+"("+
+						currentVerticeIndex+","+iters+")"+" new Edge wtf "+distNewEdge+
+						"next in sorted"+ug.dist(tour.getVertice(currentVerticeIndex), 
+								se.getXNeighbor(currentVerticeIndex, (iters+1)%pathLength)));
+						}
 						int swapWithIndexInPath=Help.indexInArray(tour.path, toVertice);
 						
 //						System.out.println("before " +tourLength(dist,tour));

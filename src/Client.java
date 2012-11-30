@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 public class Client {
 	public final static boolean debug=true;
-	public final static boolean plainRead=true;
+	public final static boolean plainRead=false;
 	
 	public static void main(String args[]){		
 		long t1 =System.currentTimeMillis()+1650;
@@ -41,30 +41,35 @@ public class Client {
 		SortedEdges se=new SortedEdges(ug);
 		Path tour1= new Path(ug);
 		TSP_Tour tsp=new TSP_Tour(ug,se,tour1);
-		tsp.setGreedyTour();
-		int naive=tsp.pathDistance();
-//		tsp.twoOpt();
-//		ug.twoOptTimed(t1);
-//		ug.twoOptAnnelingTimed(t1);
-	
-		
-		
-//		int[][] distances =calculateDistances(points,N);
-////		int[] tour=greedyTour(distances,N);
-//		int[] tour= MinimumSpanningTree.solve(distances, N);
-////		io.println("greedy tour");
-//		int mstDist=tourLength(distances,tour);
-//
-////		boolean improved = true;
-////		while(improved&&System.currentTimeMillis()<t1){
-////			improved =swapOpt(tour,distances);
-////		}
-//		
-////		int[] tour2= greedyTour(distances, N);
-////		int greedDist=tourLength(distances,tour2);
-////		if(mstDist>greedDist){
-////			tour=tour2;
-////		}
+		int naive=-1;
+		if(debug){
+			tsp.setGreedyTour();
+			naive=tsp.pathDistance();
+		}
+//		int count=0;
+//		tsp.setRandomTour();
+//		int nrOfTimes=200;
+//		int best=tsp.pathDistance();
+//		int[] bestTour=tsp.getPathCopy();
+//		for(int i=0;i<nrOfTimes&&System.currentTimeMillis()<t1;i++){
+//			tsp.setRandomTour();
+//			
+//			boolean improved = true;
+//			while(improved&&System.currentTimeMillis()<t1){
+//				count++;
+//				improved =tsp.twoOpt();
+//			}
+//			
+//			if(tsp.pathDistance()<best){
+//				System.out.println("best tour found: "+tsp.pathDistance());
+//				best=tsp.pathDistance();
+//				bestTour=tsp.getPathCopy();
+//			}
+//			
+//		}
+//		int[]tour2=bestTour;
+
+//		tsp.setRandomTour();
 		boolean improved = true;
 		int count=0;
 		while(improved&&System.currentTimeMillis()<t1){

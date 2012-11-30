@@ -1,3 +1,5 @@
+import java.util.Random;
+
 
 public class Help {
 	public Help(){
@@ -54,7 +56,24 @@ public class Help {
 		}
 		return -1;
 	}
-
-
-
+	
+	/**
+	 * from
+	 * http://www.codinghorror.com/blog/2007/12/the-danger-of-naivete.html
+	 * @param arr
+	 * @param rand
+	 */
+	public static void randomShuffle(int[] arr, Random rand){
+		for(int i=arr.length-1; i>0;i--){
+			Help.swap(arr,i,rand.nextInt(i+1));
+		}
+	}
+	
+	public static int[] indexFilledArray(int size){
+		int[] arr=new int[size];
+		for(int i=0;i<size;i++){
+			arr[i]=i;
+		}
+		return arr;
+	}
 }
