@@ -4,8 +4,8 @@ import java.util.Arrays;
 
 
 public class Client {
-	public final static boolean debug=true;
-	public final static boolean plainRead=false;
+	public final static boolean debug=false;
+	public final static boolean plainRead=true;
 	
 	public static void main(String args[]){		
 		long t1 =System.currentTimeMillis()+1650;
@@ -42,9 +42,12 @@ public class Client {
 		Path tour1= new Path(ug);
 		TSP_Tour tsp=new TSP_Tour(ug,se,tour1);
 		int naive=-1;
+		tsp.setGreedyTour();
 		if(debug){
+			
 			tsp.setGreedyTour();
 			naive=tsp.pathDistance();
+//			tsp.setRandomTour();
 		}
 //		int count=0;
 //		tsp.setRandomTour();
@@ -71,11 +74,36 @@ public class Client {
 
 //		tsp.setRandomTour();
 		boolean improved = true;
+		boolean improved2=true;
 		int count=0;
-		while(improved&&System.currentTimeMillis()<t1){
-			count++;
-			improved =tsp.twoOpt();
+		while(improved2&&System.currentTimeMillis()<t1){
+			improved2=false;
+			improved = true;
+			while(improved&&System.currentTimeMillis()<t1){
+				count++;
+				improved =tsp.twoOpt();
+//				System.out.println(improved2+" "+improved);
+				improved2=improved2||improved;
+//				System.out.println(improved2+"_"+improved);
+			}
+			improved = true;
+			count=0;
+			while(improved&&System.currentTimeMillis()<t1&&count<5){
+				count++;
+				improved =tsp.twoPointFiveOpt();
+				improved2=improved2||improved;
+			}
 		}
+		
+		
+		improved = true;
+		count=0;
+		if(debug){
+			System.out.println("after 2.5 opt"+tsp.pathDistance());
+		}
+//		System.out.println("FOR SHIT AND STUFF");
+
+
 		int[] tour2=tsp.getPathCopy();
 		
 		
@@ -96,7 +124,7 @@ public class Client {
 		
 		if(debug){
 			int OptPoint=tsp.pathDistance();
-			int optimal=3558;
+			int optimal=2789;
 			double score=(OptPoint-optimal);
 			score=score/(double)(naive-optimal);
 			score= Math.pow(0.02d, score);

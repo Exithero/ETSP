@@ -8,7 +8,7 @@ public class Test {
 	 */
 	public static void main(String[] args) {
 //		System.out.println("HEJ");
-//		int[] arr={1,2,3,4,5,6};
+		int[] arr={0,1,2,3,4,5};
 //		int[] arr1;
 //		System.out.println(mod2(-9,3));
 //		arr1=Arrays.copyOf(arr, arr.length);
@@ -35,7 +35,7 @@ public class Test {
 //			}
 //		}
 		
-		Kattio io = new Kattio(System.in,System.out);
+//		Kattio io = new Kattio(System.in,System.out);
 //		int N=io.getInt();
 //		double[][] points=readPoints(io,N);
 //		
@@ -44,7 +44,80 @@ public class Test {
 //		printArray(dist1);
 //		printArray(dist2);
 		
-		printArray(readOtherData(io));
+//		printArray(readOtherData(io));
+		System.out.println(Arrays.toString(arr));
+		insert(arr,0, 5);
+		System.out.println(Arrays.toString(arr));
+	}
+	
+	
+	
+	public static void moveSubArray(int[] arr, int from, int to, int offset){
+		int iters=0;
+		if(from>to){
+			iters=((arr.length-from)+to)+1;
+		} else {
+			iters=(to-from)+1;
+		}
+		if(offset==1){
+			int previous=circleIncrement(to, arr.length);
+			for(int i=0;i<iters;i++){
+				swap(arr,to,previous);
+				previous=to;
+				to=circleDecrement(to,arr.length);
+			}
+		}
+		if(offset==-1){
+			int previous=circleDecrement(from, arr.length);
+			for(int i=0;i<iters;i++){
+				swap(arr,from,previous);
+				previous=from;
+				from=circleIncrement(from,arr.length);
+			}
+		}
+	}
+	public static void insert(int[] path,int fromIndex, int toIndex){
+		if(fromIndex<toIndex){
+			Help.moveSubArray(path, Help.circleIncrement(fromIndex, path.length), toIndex, -1);
+		}
+		if(fromIndex>toIndex){
+			Help.moveSubArray(path, toIndex, Help.circleDecrement(fromIndex, path.length), 1);
+		}
+		
+		return;
+	}
+	
+	public static int circleIncrement(int x, int n){
+		x++;
+		if(x>=n){ x=0; }
+		return x;
+	}
+	
+	public static int circleDecrement(int x, int n){
+		x--;
+		if(x<0){ x=n-1; }
+		return x;
+	}
+	
+	public static void shiftSubArray(int[] arr, int from, int to, int offset){
+		int iters=0;
+		if(from>to){
+			iters=((arr.length-from)+to);
+		} else {
+			iters=(to-from)+1;
+		}
+		if(offset>0){
+			for(int i=0;i<iters;i++){
+				arr[Help.mod2(to+offset, arr.length)]=arr[to];
+				to = circleDecrement(to, arr.length);
+			}
+		} else {
+			for(int i=0;i<iters;i++){
+				arr[Help.mod2(from+offset, arr.length)]=arr[from];
+				from = circleIncrement(from, arr.length);
+			}
+		}
+		
 	}
 	
 	

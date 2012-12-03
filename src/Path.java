@@ -9,6 +9,42 @@ public class Path {
 		this.ug=ug;
 	}
 	
+	public void insert(int fromIndex, int toIndex){
+		if(fromIndex<toIndex){
+			Help.moveSubArray(path, Help.circleIncrement(fromIndex, path.length), toIndex, -1);
+		}
+		if(fromIndex>toIndex){
+			Help.moveSubArray(path, toIndex, Help.circleDecrement(fromIndex, path.length), 1);
+		}
+		
+		return;
+	}
+	
+	/**
+	 * returns the improvment
+	 * @param fromIndex
+	 * @param toIndex
+	 * @return
+	 */
+	public boolean isBetterToInsert(int fromIndex, int toIndex){
+		int oldEdges=0;
+		int newEdges=0;
+		if(fromIndex>toIndex){
+			oldEdges=easyDist(fromIndex, fromIndex-1) + easyDist(fromIndex,fromIndex+1) + easyDist(toIndex,toIndex-1);	
+			newEdges=easyDist(fromIndex-1, fromIndex+1) + easyDist(toIndex-1,fromIndex) + easyDist(fromIndex,toIndex);
+		}
+		
+		if(fromIndex<toIndex){
+			oldEdges=easyDist(fromIndex, fromIndex-1) + easyDist(fromIndex,fromIndex+1) + easyDist(toIndex,toIndex+1);	
+			newEdges=easyDist(fromIndex-1, fromIndex+1) + easyDist(toIndex,fromIndex) + easyDist(fromIndex,toIndex+1);
+		}
+//		System.out.println("insert edges "+ newEdges+" "+oldEdges);
+		return (newEdges-oldEdges)<0;
+		
+	}
+	
+	
+	
 	public void setPath(int[] path){
 		this.path=path;
 	}
@@ -25,6 +61,25 @@ public class Path {
 		int b = path[circleIndex(verticeIndex + direction, path.length)];
 		return ug.dist(a,b);
 	}
+	
+	/**
+	 * calculates dist between vertice at index a and at index b,
+	 * and it handles index out of bounds gracefully.
+	 * @param verticeIndex
+	 * @param direction
+	 * @return
+	 */
+	public int easyDist(int a, int b){
+		//it dosen't matter in this case which is to and which is from because 
+		//the graph is undirected
+		a = this.getVertice(circleIndex(a, path.length));
+		b = this.getVertice(circleIndex(b, path.length));
+//		a = this.getVertice(Help.mod2(a, path.length));
+//		b = this.getVertice(Help.mod2(b, path.length));
+		return ug.dist(a,b);
+	}
+	
+	
 	/**
 	 * reverses a subs path in the path. 
 	 * O(n)

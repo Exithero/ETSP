@@ -33,6 +33,91 @@ public class Help {
 		}
 	}
 	
+	public void insert(int[]arr,int fromIndex, int toIndex){
+		return;
+		
+	}
+	
+	public static int iters(int from, int to, int n){
+		int iters=0;
+		if(from>to){
+			iters=((n-from)+to)+1;
+		} else {
+			iters=(to-from)+1;
+		}
+		return iters;
+	}
+	
+	public static void moveSubArray(int[] arr, int from, int to, int offset){
+		int iters=0;
+		if(from>to){
+			iters=((arr.length-from)+to)+1;
+		} else {
+			iters=(to-from)+1;
+		}
+		if(offset==1){
+			int previous=circleIncrement(to, arr.length);
+			for(int i=0;i<iters;i++){
+				swap(arr,to,previous);
+				previous=to;
+				to=circleDecrement(to,arr.length);
+			}
+		}
+		if(offset==-1){
+			int previous=circleDecrement(from, arr.length);
+			for(int i=0;i<iters;i++){
+				swap(arr,from,previous);
+				previous=from;
+				from=circleIncrement(from,arr.length);
+			}
+		}
+	}
+	
+//	public void moveSubArray(int[] arr, int fromIndex, int toIndex, int offset){
+//		if(offset==1){
+//			int tmp=arr[toIndex+offset];
+//			
+//		}
+//		if(offset==-1){
+//			
+//		}
+//		replace=arr[fromIndex];
+//		for()
+//	}
+//	
+//	public void shiftSubArray(int[] arr, int from, int to, int offset){
+//		int iters=0;
+//		if(from>to){
+//			iters=((arr.length-from)+to);
+//		} else {
+//			iters=(to-from);
+//		}
+//		if(offset>0){
+//			for(int i=0;i<iters;i++){
+//				arr[to+offset]=arr[to];
+//				to = circleDecrement(to, arr.length);
+//			}
+//		} else {
+//			for(int i=0;i<iters;i++){
+//				arr[from+offset]=arr[from];
+//				from = circleIncrement(from, arr.length);
+//			}
+//		}
+//		
+//	}
+	
+	public static int circleIncrement(int x, int n){
+		x++;
+		if(x>=n){ x=0; }
+		return x;
+	}
+	
+	public static int circleDecrement(int x, int n){
+		x--;
+		if(x<0){ x=n-1; }
+		return x;
+	}
+	
 	public static void swap(int[] arr, int from, int to){
 		int tmp=arr[from];
 		arr[from]=arr[to];
