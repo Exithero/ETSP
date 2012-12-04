@@ -7,6 +7,8 @@ public class Client {
 	public final static boolean debug=true;
 	public final static boolean plainRead=false;
 	
+	public final static boolean test1=true;
+	
 	public static void main(String args[]){		
 		long t1 =System.currentTimeMillis()+1650;
 		
@@ -23,6 +25,8 @@ public class Client {
 		if(debug){
 			t1=t1+1000000;
 		}
+		
+		
 		
 		
 		
@@ -68,6 +72,10 @@ public class Client {
 			System.out.println("greedy : "+time);
 		}
 		
+		
+		
+		
+		
 		if(debug){
 			
 			tsp.setGreedyTour();
@@ -98,28 +106,59 @@ public class Client {
 //		int[]tour2=bestTour;
 
 //		tsp.setRandomTour();
-		if(debug){ before=System.currentTimeMillis(); }
-		boolean improved = true;
-		boolean improved2=true;
 		int count=0;
-		while(improved2&&System.currentTimeMillis()<t1){
-			improved2=false;
-			improved = true;
-			while(improved&&System.currentTimeMillis()<t1){
-				count++;
-				improved =tsp.twoOpt();
-//				System.out.println(improved2+" "+improved);
-				improved2=improved2||improved;
-//				System.out.println(improved2+"_"+improved);
+		if(debug){ before=System.currentTimeMillis(); }
+		if(test1){
+			//TEST!
+			if(test1){
+//				tsp.setRandomTour();
+//				System.out.println("greedy: "+Arrays.toString(tour1.getPathCopy()));
+				int distBefore=tour1.pathDistance();
+				Kswap2 ks=new Kswap2(tour1);
+//				int[] cuts=new int[3];
+//				cuts[0]=3;
+//				cuts[1]=6;
+//				cuts[2]=9;
+//				ks.startFindBestSolution(cuts);
+				boolean improved=true;
+				while(improved&&System.currentTimeMillis()<t1){
+					count++;
+					improved = tsp.startKopt(2, ks);
+//					System.out.println("pathLength "+tour1.pathDistance());
+				}
+				
+//				System.out.println("prinitng new path");
+//				System.out.println(Arrays.toString(tour1.getPathCopy()));
+				if(debug){
+					System.out.println("distBefore: "+distBefore+" distAfter "+tour1.pathDistance());
+				}
+				
+				
 			}
-			improved = true;
-			count=0;
-			while(improved&&System.currentTimeMillis()<t1&&count<5){
-				count++;
-				improved =tsp.twoPointFiveOpt();
-				improved2=improved2||improved;
+		} else {
+			boolean improved = true;
+			boolean improved2=true;
+			while(improved2&&System.currentTimeMillis()<t1){
+				improved2=false;
+				improved = true;
+				while(improved&&System.currentTimeMillis()<t1){
+					count++;
+					improved =tsp.twoOpt();
+//					System.out.println(improved2+" "+improved);
+					improved2=improved2||improved;
+//					System.out.println(improved2+"_"+improved);
+				}
+				improved = true;
+				count=0;
+				while(improved&&System.currentTimeMillis()<t1&&count<5){
+					count++;
+					improved =tsp.twoPointFiveOpt();
+					improved2=improved2||improved;
+				}
 			}
 		}
+		
+		
 		
 		if(debug){
 			after=System.currentTimeMillis();
@@ -156,6 +195,8 @@ public class Client {
 			
 		
 	}
+	
+
 	
 	public static double[][] readPoints(Kattio io, int N){
 //		int N = io.getInt();

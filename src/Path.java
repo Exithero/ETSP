@@ -1,6 +1,7 @@
 import java.util.Arrays;
 
 
+
 public class Path {
 	int[] path=null;
 	UndirectedGraph ug;
@@ -148,5 +149,43 @@ public class Path {
 		return path[index];
 	}
 
+	public void performSubPathChanges(SubPath[] subPaths, int[] solution, boolean[] reversed){
+		
+		
+//		System.out.println("Performing changes blabla: ");
+		
+		int filled=0;
+		
+		int[] tmp=Arrays.copyOf(path, path.length);
+		for(int i=0;i<solution.length;i++){
+			//no change
+//			if(! ( solution[i]==i && !reversed[i] ) ){
+				
+				int index=solution[i];
+				int iters=subPaths[index].length();
+				int from=subPaths[index].getLeftVerticeIndex(reversed[i]);
+				
+				
+				for(int j=0;j<iters;j++){
+					
+//					System.out.println("bla "+i+" "+from+" "+filled);
+					path[filled]=
+							tmp[from];
+					
+					//update indexes
+					if(reversed[i]){
+						from=Help.circleDecrement(from, path.length);
+					} else {
+						from=Help.circleIncrement(from, path.length);
+					}
+					filled++;
+					
+				}
+//			}
+			
+			
+			
+		}
+	}
 	
 }

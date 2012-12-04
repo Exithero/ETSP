@@ -1,4 +1,5 @@
 
+import java.util.Arrays;
 import java.util.Random;
 
 
@@ -7,6 +8,10 @@ public class TSP_Tour {
 	SortedEdges se;
 	Path tour;
 	Random rand;
+	
+	
+	
+	
 	public TSP_Tour(UndirectedGraph ug,SortedEdges se,Path tour){
 		this.ug=ug;
 		this.se=se;
@@ -127,6 +132,88 @@ public class TSP_Tour {
 		return better;
 	}
 	
+	public boolean startKopt(int k,Kswap2 kswap){
+		int[] rightCuts=new int[k];
+		
+		return kopt(kswap, rightCuts, 0, tour.length(),k,0, true);
+	}
+	
+	public boolean kopt(Kswap2 kswap, int[] rightCuts, int i, int length,int k,int index, boolean first){
+		if(k==0){
+//			System.out.println("doing k swap on: "+Arrays.toString(rightCuts));
+			return kswap.startFindBestSolution(rightCuts);
+		}
+		int limit=length;
+		boolean improved=false;
+		for(int iters=0; iters<limit; iters++){
+			rightCuts[index]=i;
+			if(first){
+				improved = kopt(kswap,rightCuts, Help.mod2(i+2, tour.length()), length-3,k-1, index+1, false) 
+						|| improved;
+			} else {
+				improved = kopt(kswap,rightCuts, Help.mod2(i+2, tour.length()), length-iters-2,k-1, index+1, false) 
+						|| improved;
+			}
+			
+			i=Help.circleIncrement(i, tour.length());
+		}
+		return improved;
+	}
+	
+//	public boolean kopt2(Kswap2 kswap, int[] rightCuts, int fromVertice, int length,int k,int index, boolean first){
+//		if(k==0){
+////			System.out.println("doing k swap on: "+Arrays.toString(rightCuts));
+//			return kswap.startFindBestSolution(rightCuts);
+//		}
+//		
+//		int limit=10;
+//		for(int i=0;i<limit;i++){
+//			int nextVertice=se.getXNeighbor(fromVertice, i);
+//		}
+//		
+//		int limit=length;
+//		boolean improved=false;
+//		for(int iters=0; iters<limit; iters++){
+//			rightCuts[index]=i;
+//			if(first){
+//				improved = kopt(kswap,rightCuts, Help.mod2(i+2, tour.length()), length-3,k-1, index+1, false) 
+//						|| improved;
+//			} else {
+//				improved = kopt(kswap,rightCuts, Help.mod2(i+2, tour.length()), length-iters-2,k-1, index+1, false) 
+//						|| improved;
+//			}
+//			
+//			i=Help.circleIncrement(i, tour.length());
+//		}
+//		return improved;
+//	}
+	
+	public boolean isntNear(int[] rightCuts, int k){
+		return false;
+	}
+	
+//	public boolean kopt(int k){
+//		boolean improved=false;
+//		for(int i1=0;i1<tour.length();i1++){
+//			int limit1=Help.mod2(i1-1, tour.length());
+//			for(int i2=Help.mod2(i1+2,tour.length()); i2!=limit1; Help.circleIncrement(i2, tour.length())){
+//				for(int i3=Help.mod2(i2+2,tour.length()); i2!=limit1; Help.circleIncrement(i2, tour.length())){
+//					
+//				}
+//			}
+//			
+//			
+//			int limit1=Help.circleDecrement(i, tour.length());
+//			for(int j=Help.circleIncrement(i, tour.length()); true ;j=Help.circleIncrement(j, tour.length())){
+//				
+//				if(j==limit1){
+//					break;
+//				}
+//			}
+//		}
+//		return improved;
+//	}
+//	
 	
 	
 	public boolean twoOpt555(){
