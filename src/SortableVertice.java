@@ -10,6 +10,7 @@ public class SortableVertice implements Comparable<SortableVertice> {
 	
 	@Override 
 	public int compareTo(SortableVertice other) {
+//		return this.distance-other.distance;
 		if(this.distance>other.distance){
 			return 1;
 		}

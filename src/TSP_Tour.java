@@ -87,7 +87,7 @@ public class TSP_Tour {
 	}
 	
 	
-	public boolean twoOpt555(){
+	public boolean twoOpt(){
 		int pathLength=tour.length();
 		
 		boolean better=false;
@@ -126,34 +126,10 @@ public class TSP_Tour {
 		}
 		return better;
 	}
-	public boolean twoPointFiveOpt(){
-		int pathLength=tour.length();
-		boolean improved=false;
-		
-		for(int fromIndex=0;fromIndex<pathLength;fromIndex++){
-			int toIndex=Help.circleIncrement(fromIndex, pathLength);
-
-			for(int j=0;j<pathLength-3;j++){
-				toIndex=Help.circleIncrement(toIndex, pathLength);
-				if(tour.isBetterToInsert(fromIndex, toIndex)){
-				
-					int before=tour.pathDistance();
-
-					tour.insert( fromIndex, toIndex);
-		
-					int after= tour.pathDistance();
-					if(before<after){
-						System.out.println("WTF MAN");
-					}
-					
-					improved=true;		
-				}			
-			}
-		
-		}
-		return improved;
-	}
-	public boolean twoOpt(){
+	
+	
+	
+	public boolean twoOpt555(){
 		int pathLength=tour.length();
 		int k=Math.min(pathLength, pathLength);
 
@@ -216,6 +192,34 @@ public class TSP_Tour {
 		return better;
 	}
 	
+	
+	public boolean twoPointFiveOpt(){
+		int pathLength=tour.length();
+		boolean improved=false;
+		
+		for(int fromIndex=0;fromIndex<pathLength;fromIndex++){
+			int toIndex=Help.circleIncrement(fromIndex, pathLength);
+
+			for(int j=0;j<pathLength-3;j++){
+				toIndex=Help.circleIncrement(toIndex, pathLength);
+				if(tour.isBetterToInsert(fromIndex, toIndex)){
+				
+					int before=tour.pathDistance();
+
+					tour.insert(fromIndex, toIndex);
+		
+					int after= tour.pathDistance();
+					if(before<after){
+						System.out.println("WTF MAN");
+					}
+					
+					improved=true;		
+				}			
+			}
+		
+		}
+		return improved;
+	}
 	
 	public boolean threeOpt(){
 		boolean improved=false;

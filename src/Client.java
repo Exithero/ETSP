@@ -4,11 +4,17 @@ import java.util.Arrays;
 
 
 public class Client {
-	public final static boolean debug=false;
-	public final static boolean plainRead=true;
+	public final static boolean debug=true;
+	public final static boolean plainRead=false;
 	
 	public static void main(String args[]){		
 		long t1 =System.currentTimeMillis()+1650;
+		
+		long start=0,before=0,after=0;
+		if(debug){
+			start=System.currentTimeMillis();
+		}
+		
 		Kattio io = new Kattio(System.in,System.out);
 		
 		double[][] points;
@@ -17,6 +23,8 @@ public class Client {
 		if(debug){
 			t1=t1+1000000;
 		}
+		
+		
 		
 		if(!plainRead){
 			//read test data from http://www.tsp.gatech.edu/vlsi/page2.html
@@ -31,18 +39,35 @@ public class Client {
 			}
 		}
 		
-//		
 		
 		
 		
-		
-		
+		if(debug){ before=System.currentTimeMillis(); }
 		UndirectedGraph ug=new UndirectedGraph(points,N);
+		if(debug){
+			after=System.currentTimeMillis();
+			long time=after-before;
+			System.out.println("graph: "+time);
+		}
+		
+		if(debug){ before=System.currentTimeMillis(); }
 		SortedEdges se=new SortedEdges(ug);
+		if(debug){
+			after=System.currentTimeMillis();
+			long time=after-before;
+			System.out.println("neighbor : "+time);
+		}
 		Path tour1= new Path(ug);
 		TSP_Tour tsp=new TSP_Tour(ug,se,tour1);
 		int naive=-1;
+		if(debug){ before=System.currentTimeMillis(); }
 		tsp.setGreedyTour();
+		if(debug){
+			after=System.currentTimeMillis();
+			long time=after-before;
+			System.out.println("greedy : "+time);
+		}
+		
 		if(debug){
 			
 			tsp.setGreedyTour();
@@ -73,6 +98,7 @@ public class Client {
 //		int[]tour2=bestTour;
 
 //		tsp.setRandomTour();
+		if(debug){ before=System.currentTimeMillis(); }
 		boolean improved = true;
 		boolean improved2=true;
 		int count=0;
@@ -95,36 +121,26 @@ public class Client {
 			}
 		}
 		
-		
-		improved = true;
-		count=0;
 		if(debug){
-			System.out.println("after 2.5 opt"+tsp.pathDistance());
+			after=System.currentTimeMillis();
+			long time=after-before;
+			System.out.println("optimization : "+time);
 		}
-//		System.out.println("FOR SHIT AND STUFF");
 
 
 		int[] tour2=tsp.getPathCopy();
 		
 		
-//		
-//	
-//		
-//		
-////		io.println("greedyTour length "+tourLength(distances,tour));
-//////		io.println("MST tour");
-////		for(int i=0;i<N;i++){
-////			io.println(superTour[i]);
-////		}
-		
-		
-		for(int i=0;i<N;i++){
-			io.println(tour2[i]);
+		if(!debug){
+			for(int i=0;i<N;i++){
+				io.println(tour2[i]);
+			}
 		}
+		
 		
 		if(debug){
 			int OptPoint=tsp.pathDistance();
-			int optimal=2789;
+			int optimal=3558;
 			double score=(OptPoint-optimal);
 			score=score/(double)(naive-optimal);
 			score= Math.pow(0.02d, score);

@@ -45,6 +45,8 @@ public class Path {
 	
 	
 	
+	
+	
 	public void setPath(int[] path){
 		this.path=path;
 	}
@@ -64,19 +66,20 @@ public class Path {
 	
 	/**
 	 * calculates dist between vertice at index a and at index b,
-	 * and it handles index out of bounds gracefully.
+	 * and it handles index out of bounds gracefully 
+	 * (if the indexes are -this.length()<a<2*this.length()).
 	 * @param verticeIndex
 	 * @param direction
 	 * @return
 	 */
-	public int easyDist(int a, int b){
+	public int easyDist(int verticeIndexA, int VerticeIndexB){
 		//it dosen't matter in this case which is to and which is from because 
 		//the graph is undirected
-		a = this.getVertice(circleIndex(a, path.length));
-		b = this.getVertice(circleIndex(b, path.length));
+		int verticeA = this.getVertice(circleIndex(verticeIndexA, this.length()));
+		int verticeB = this.getVertice(circleIndex(VerticeIndexB, this.length()));
 //		a = this.getVertice(Help.mod2(a, path.length));
 //		b = this.getVertice(Help.mod2(b, path.length));
-		return ug.dist(a,b);
+		return ug.dist(verticeA,verticeB);
 	}
 	
 	
