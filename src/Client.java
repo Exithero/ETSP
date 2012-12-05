@@ -4,8 +4,8 @@ import java.util.Arrays;
 
 
 public class Client {
-	public final static boolean debug=false;
-	public final static boolean plainRead=true;
+	public final static boolean debug=true;
+	public final static boolean plainRead=false;
 	
 	public final static boolean test1=true;
 	
@@ -22,10 +22,10 @@ public class Client {
 		double[][] points;
 		int N;
 		
+		
 		if(debug){
 			t1=t1+1000000;
 		}
-		
 		
 		
 		

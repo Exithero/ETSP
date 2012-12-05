@@ -271,9 +271,9 @@ public class TSP_Tour {
 //		return improved;
 //	}
 	
-	public boolean isntNear(int[] rightCuts, int k){
-		return false;
-	}
+//	public boolean isntNear(int[] rightCuts, int k){
+//		return false;
+//	}
 	
 //	public boolean kopt(int k){
 //		boolean improved=false;
