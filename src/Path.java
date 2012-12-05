@@ -44,6 +44,23 @@ public class Path {
 		
 	}
 	
+	public int isBetterToInsertBest(int fromIndex, int toIndex){
+		int oldEdges=0;
+		int newEdges=0;
+		if(fromIndex>toIndex){
+			oldEdges=easyDist(fromIndex, fromIndex-1) + easyDist(fromIndex,fromIndex+1) + easyDist(toIndex,toIndex-1);	
+			newEdges=easyDist(fromIndex-1, fromIndex+1) + easyDist(toIndex-1,fromIndex) + easyDist(fromIndex,toIndex);
+		}
+		
+		if(fromIndex<toIndex){
+			oldEdges=easyDist(fromIndex, fromIndex-1) + easyDist(fromIndex,fromIndex+1) + easyDist(toIndex,toIndex+1);	
+			newEdges=easyDist(fromIndex-1, fromIndex+1) + easyDist(toIndex,fromIndex) + easyDist(fromIndex,toIndex+1);
+		}
+//		System.out.println("insert edges "+ newEdges+" "+oldEdges);
+		return (oldEdges-newEdges);
+		
+	}
+	
 	
 	
 	

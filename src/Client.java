@@ -4,13 +4,13 @@ import java.util.Arrays;
 
 
 public class Client {
-	public final static boolean debug=true;
-	public final static boolean plainRead=false;
+	public final static boolean debug=false;
+	public final static boolean plainRead=true;
 	
-	public final static boolean test1=true;
+	public final static boolean test1=false;
 	
 	public static void main(String args[]){		
-		long t1 =System.currentTimeMillis()+1800;
+		long t1 =System.currentTimeMillis()+1650;
 		
 		long start=0,before=0,after=0;
 		if(debug){
@@ -117,7 +117,7 @@ public class Client {
 			if(test1){
 //				tsp.setRandomTour();
 //				System.out.println("greedy: "+Arrays.toString(tour1.getPathCopy()));
-				int distBefore;
+				int distBefore=0;
 				if(debug){
 					distBefore=tour1.pathDistance();
 				}
@@ -134,13 +134,13 @@ public class Client {
 				while(improved&&System.currentTimeMillis()<t1){
 					count++;
 //					if(debug){ timeBLa=System.currentTimeMillis(); }
-					improved = tsp.startKopt(3, ks);
+					improved = tsp.startKopt(4, ks);
 //					if(debug){
 //						after=System.currentTimeMillis();
 //						long time=after-timeBLa;
 //						System.out.println("one iter time: "+time);
 //					}
-//					System.out.println("pathLength "+tour1.pathDistance());
+					System.out.println("pathLength "+tour1.pathDistance());
 				}
 				
 				
@@ -154,25 +154,37 @@ public class Client {
 				
 			}
 		} else {
+			Kswap2 ks=new Kswap2(tour1);
 			boolean improved = true;
 			boolean improved2=true;
 			while(improved2&&System.currentTimeMillis()<t1){
 				improved2=false;
 				improved = true;
+				
+			
 				while(improved&&System.currentTimeMillis()<t1){
 					count++;
-					improved =tsp.twoOpt();
+					improved =tsp.twoOptBest();
 //					System.out.println(improved2+" "+improved);
 					improved2=improved2||improved;
 //					System.out.println(improved2+"_"+improved);
 				}
 				improved = true;
 				count=0;
-				while(improved&&System.currentTimeMillis()<t1&&count<5){
+				while(improved&&System.currentTimeMillis()<t1&&count<3){
 					count++;
 					improved =tsp.twoPointFiveOpt();
 					improved2=improved2||improved;
 				}
+				improved=true;
+				while(improved&&System.currentTimeMillis()<t1){
+					improved =tsp.startKopt(3, ks);
+					improved2=improved2||improved;
+				}
+				
+			
+			
+				
 			}
 		}
 		
