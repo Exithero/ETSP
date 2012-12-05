@@ -135,7 +135,7 @@ public class TSP_Tour {
 	public boolean startKopt(int k,Kswap2 kswap){
 		int[] rightCuts=new int[k];
 		
-		return kopt(kswap, rightCuts, 0, tour.length(),k,0, true);
+		return kopt3(kswap, rightCuts, 0, tour.length(),k,0, true);
 	}
 	
 	public boolean kopt(Kswap2 kswap, int[] rightCuts, int i, int length,int k,int index, boolean first){
@@ -148,9 +148,13 @@ public class TSP_Tour {
 		for(int iters=0; iters<limit; iters++){
 			rightCuts[index]=i;
 			if(first){
-				improved = kopt(kswap,rightCuts, Help.mod2(i+2, tour.length()), length-3,k-1, index+1, false) 
+				//length -4 because are really choosing 2 vertices and the second vertice makes 
+				//it so that one extra place is forbidden
+				//<-xxOxn->
+				improved = kopt(kswap,rightCuts, Help.mod2(i+2, tour.length()), length-4,k-1, index+1, false) 
 						|| improved;
 			} else {
+				//<-xxOx(iters)Oxn->
 				improved = kopt(kswap,rightCuts, Help.mod2(i+2, tour.length()), length-iters-2,k-1, index+1, false) 
 						|| improved;
 			}
@@ -159,6 +163,82 @@ public class TSP_Tour {
 		}
 		return improved;
 	}
+	
+	/**
+	 * will contain various improvments
+	 * @param kswap
+	 * @param rightCuts
+	 * @param i
+	 * @param length
+	 * @param k
+	 * @param index
+	 * @param first
+	 * @return
+	 */
+	public boolean kopt3(Kswap2 kswap, int[] rightCuts, int i, int length,int k,int index, boolean first){
+		if(k==0){
+//			System.out.println("doing k swap on: "+Arrays.toString(rightCuts));
+			return kswap.startFindBestSolution(rightCuts);
+		}
+		int limit=length;
+		boolean improved=false;
+		for(int iters=0; iters<limit; iters++){
+			rightCuts[index]=i;
+			if(checkOptimization(rightCuts,index)){
+				if(first){
+					improved = kopt3(kswap,rightCuts, Help.mod2(i+2, tour.length()), length-4,k-1, index+1, false) 
+							|| improved;
+				} else {
+					improved = kopt3(kswap,rightCuts, Help.mod2(i+2, tour.length()), length-iters-2,k-1, index+1, false) 
+							|| improved;
+				}
+			}
+			
+			
+			i=Help.circleIncrement(i, tour.length());
+		}
+		return improved;
+	}
+	
+	/**
+	 * rightCuts at the index need to be filled before calling this method.
+	 * @param rightCuts
+	 * @param index
+	 * @return
+	 */
+	public boolean checkOptimization(int[] rightCuts, int index){
+		final int opt=index+1;
+		if(opt==1){//no opt
+			return true;
+		} else if(opt==2){//2-opt check
+			//d(t 1 ,t 2 ) > d(t 2 ,t 3 )
+			int t1=rightCuts[0];
+			int t2=Help.circleIncrement(rightCuts[0], tour.length());
+			int t3=rightCuts[1];
+			
+			int oldDist=tour.indexDistance(t1, t2);
+			int newDist=tour.indexDistance(t2, t3);
+			
+			return newDist<oldDist;
+		} else if(opt==3){
+			//d(t 1 ,t 2 ) + d(t 3 ,t 4 ) > d(t 2 ,t 3 ) + d(t 4 ,t 5 ).
+			int t1=rightCuts[0];
+			int t2=Help.circleIncrement(rightCuts[0], tour.length());
+			int t3=rightCuts[1];
+			int t4=Help.circleIncrement(rightCuts[1], tour.length());
+			int t5=rightCuts[2];
+			
+			int oldDist=tour.indexDistance(t1, t2)+tour.indexDistance(t3, t4);
+			int newDist=tour.indexDistance(t2, t3)+tour.indexDistance(t4, t5);
+			
+			return newDist<oldDist;
+		}
+		//add more opts here
+		
+		
+		return true;
+	}
+	
 	
 //	public boolean kopt2(Kswap2 kswap, int[] rightCuts, int fromVertice, int length,int k,int index, boolean first){
 //		if(k==0){
@@ -308,30 +388,30 @@ public class TSP_Tour {
 		return improved;
 	}
 	
-	public boolean threeOpt(){
-		boolean improved=false;
-		int pathLength= tour.length();
-		for(int vi1=0;vi1<pathLength;vi1++){
-			for(int vi2=0;vi2<pathLength;vi2++){
-				for(int vi3=0;vi3<pathLength;vi3++){
-					if(swap3opt(vi1,vi2, vi3)){
-						
-					}
-				}
-			}
-		}
-		return  improved;
-	}
+//	public boolean threeOpt(){
+//		boolean improved=false;
+//		int pathLength= tour.length();
+//		for(int vi1=0;vi1<pathLength;vi1++){
+//			for(int vi2=0;vi2<pathLength;vi2++){
+//				for(int vi3=0;vi3<pathLength;vi3++){
+//					if(swap3opt(vi1,vi2, vi3)){
+//						
+//					}
+//				}
+//			}
+//		}
+//		return  improved;
+//	}
 	
-	public boolean threeoptmove(int vi1, int vi2, int vi3){
-		//find best of the 8 permutations
-		
-		return true;
-	}
+//	public boolean threeoptmove(int vi1, int vi2, int vi3){
+//		//find best of the 8 permutations
+//		
+//		return true;
+//	}
 	
-	public boolean swap3opt(int vi1, int vi2, int vi3){
-		return true;
-	}
+//	public boolean swap3opt(int vi1, int vi2, int vi3){
+//		return true;
+//	}
 	
 
 	

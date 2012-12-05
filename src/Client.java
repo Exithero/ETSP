@@ -59,7 +59,7 @@ public class Client {
 		if(debug){
 			after=System.currentTimeMillis();
 			long time=after-before;
-			System.out.println("neighbor : "+time);
+			System.out.println("neighbor time : "+time);
 		}
 		Path tour1= new Path(ug);
 		TSP_Tour tsp=new TSP_Tour(ug,se,tour1);
@@ -69,7 +69,7 @@ public class Client {
 		if(debug){
 			after=System.currentTimeMillis();
 			long time=after-before;
-			System.out.println("greedy : "+time);
+			System.out.println("construction time : "+time);
 		}
 		
 		
@@ -123,7 +123,7 @@ public class Client {
 				boolean improved=true;
 				while(improved&&System.currentTimeMillis()<t1){
 					count++;
-					improved = tsp.startKopt(2, ks);
+					improved = tsp.startKopt(3, ks);
 //					System.out.println("pathLength "+tour1.pathDistance());
 				}
 				
@@ -163,7 +163,7 @@ public class Client {
 		if(debug){
 			after=System.currentTimeMillis();
 			long time=after-before;
-			System.out.println("optimization : "+time);
+			System.out.println("optimization time: "+time);
 		}
 
 
