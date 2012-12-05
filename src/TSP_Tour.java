@@ -9,14 +9,16 @@ public class TSP_Tour {
 	Path tour;
 	Random rand;
 	
+	long timeLimit;//TEST
 	
 	
 	
-	public TSP_Tour(UndirectedGraph ug,SortedEdges se,Path tour){
+	public TSP_Tour(UndirectedGraph ug,SortedEdges se,Path tour,long timeLimit){
 		this.ug=ug;
 		this.se=se;
 		this.tour=tour;
 		this.rand= new Random();
+		this.timeLimit=timeLimit;//TEST
 	}
 	
 
@@ -148,13 +150,13 @@ public class TSP_Tour {
 		for(int iters=0; iters<limit; iters++){
 			rightCuts[index]=i;
 			if(first){
-				//length -4 because are really choosing 2 vertices and the second vertice makes 
+				//length -3 because are really choosing 2 vertices and the second vertice makes 
 				//it so that one extra place is forbidden
-				//<-xxOxn->
-				improved = kopt(kswap,rightCuts, Help.mod2(i+2, tour.length()), length-4,k-1, index+1, false) 
+				//<-xOxn->
+				improved = kopt(kswap,rightCuts, Help.mod2(i+2, tour.length()), length-3,k-1, index+1, false) 
 						|| improved;
 			} else {
-				//<-xxOx(iters)Oxn->
+				//<-xOx(iters)Oxn->
 				improved = kopt(kswap,rightCuts, Help.mod2(i+2, tour.length()), length-iters-2,k-1, index+1, false) 
 						|| improved;
 			}
@@ -180,13 +182,14 @@ public class TSP_Tour {
 //			System.out.println("doing k swap on: "+Arrays.toString(rightCuts));
 			return kswap.startFindBestSolution(rightCuts);
 		}
+		if(index<=1&&System.currentTimeMillis()>=this.timeLimit){ return false; }//Time limit
 		int limit=length;
 		boolean improved=false;
 		for(int iters=0; iters<limit; iters++){
 			rightCuts[index]=i;
 			if(checkOptimization(rightCuts,index)){
 				if(first){
-					improved = kopt3(kswap,rightCuts, Help.mod2(i+2, tour.length()), length-4,k-1, index+1, false) 
+					improved = kopt3(kswap,rightCuts, Help.mod2(i+2, tour.length()), length-3,k-1, index+1, false) 
 							|| improved;
 				} else {
 					improved = kopt3(kswap,rightCuts, Help.mod2(i+2, tour.length()), length-iters-2,k-1, index+1, false) 
@@ -220,7 +223,7 @@ public class TSP_Tour {
 			int newDist=tour.indexDistance(t2, t3);
 			
 			return newDist<oldDist;
-		} else if(opt==3){
+		} else if(opt==3){//3-opt check
 			//d(t 1 ,t 2 ) + d(t 3 ,t 4 ) > d(t 2 ,t 3 ) + d(t 4 ,t 5 ).
 			int t1=rightCuts[0];
 			int t2=Help.circleIncrement(rightCuts[0], tour.length());

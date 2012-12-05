@@ -4,13 +4,13 @@ import java.util.Arrays;
 
 
 public class Client {
-	public final static boolean debug=true;
-	public final static boolean plainRead=false;
+	public final static boolean debug=false;
+	public final static boolean plainRead=true;
 	
 	public final static boolean test1=true;
 	
 	public static void main(String args[]){		
-		long t1 =System.currentTimeMillis()+1650;
+		long t1 =System.currentTimeMillis()+1800;
 		
 		long start=0,before=0,after=0;
 		if(debug){
@@ -55,14 +55,18 @@ public class Client {
 		}
 		
 		if(debug){ before=System.currentTimeMillis(); }
-		SortedEdges se=new SortedEdges(ug);
+		SortedEdges se=null;
+		if(!test1){
+			se=new SortedEdges(ug);
+		}
+		
 		if(debug){
 			after=System.currentTimeMillis();
 			long time=after-before;
 			System.out.println("neighbor time : "+time);
 		}
 		Path tour1= new Path(ug);
-		TSP_Tour tsp=new TSP_Tour(ug,se,tour1);
+		TSP_Tour tsp=new TSP_Tour(ug,se,tour1,t1);
 		int naive=-1;
 		if(debug){ before=System.currentTimeMillis(); }
 		tsp.setGreedyTour();
@@ -113,19 +117,33 @@ public class Client {
 			if(test1){
 //				tsp.setRandomTour();
 //				System.out.println("greedy: "+Arrays.toString(tour1.getPathCopy()));
-				int distBefore=tour1.pathDistance();
+				int distBefore;
+				if(debug){
+					distBefore=tour1.pathDistance();
+				}
 				Kswap2 ks=new Kswap2(tour1);
+						
 //				int[] cuts=new int[3];
 //				cuts[0]=3;
 //				cuts[1]=6;
 //				cuts[2]=9;
 //				ks.startFindBestSolution(cuts);
+				long timeBLa;
+				
 				boolean improved=true;
 				while(improved&&System.currentTimeMillis()<t1){
 					count++;
+//					if(debug){ timeBLa=System.currentTimeMillis(); }
 					improved = tsp.startKopt(3, ks);
+//					if(debug){
+//						after=System.currentTimeMillis();
+//						long time=after-timeBLa;
+//						System.out.println("one iter time: "+time);
+//					}
 //					System.out.println("pathLength "+tour1.pathDistance());
 				}
+				
+				
 				
 //				System.out.println("prinitng new path");
 //				System.out.println(Arrays.toString(tour1.getPathCopy()));
@@ -166,7 +184,7 @@ public class Client {
 			System.out.println("optimization time: "+time);
 		}
 
-
+		if(debug){ before=System.currentTimeMillis(); }
 		int[] tour2=tsp.getPathCopy();
 		
 		
@@ -189,7 +207,15 @@ public class Client {
 			io.println("Points given: "+score*50);
 		}
 		io.flush();
+		
+		if(debug){
+			after=System.currentTimeMillis();
+			long time=after-before;
+			System.out.println("printing etc time: "+time);
+		}
 		io.close();
+		
+		
 		
 		
 			
