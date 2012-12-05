@@ -4,8 +4,8 @@ import java.util.Arrays;
 
 
 public class Client {
-	public final static boolean debug=false;
-	public final static boolean plainRead=true;
+	public final static boolean debug=true;
+	public final static boolean plainRead=false;
 	
 	public final static boolean test1=false;
 	
@@ -164,7 +164,7 @@ public class Client {
 			
 				while(improved&&System.currentTimeMillis()<t1){
 					count++;
-					improved =tsp.twoOptBest();
+					improved =tsp.twoOpt();
 //					System.out.println(improved2+" "+improved);
 					improved2=improved2||improved;
 //					System.out.println(improved2+"_"+improved);
