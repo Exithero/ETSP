@@ -7,6 +7,7 @@
  * Also it contains some convenience functions that can be performed on
  * a modulo circle.
  * 
+ * 2012-12-06
  * @author mbernt
  *
  */

@@ -13,7 +13,10 @@
  * 
  * For maximum performance in nested loops it's recommended to construct the CircleIndex objects
  * before the loops, and setting the indexes just before entering the loop.
- * @author mbernt
+ * 
+ * 2012-12-06
+ * @author mbernt 
+ * 
  *
  */
 public class CircleIndex {
