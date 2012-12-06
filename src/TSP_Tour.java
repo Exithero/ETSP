@@ -185,43 +185,30 @@ public class TSP_Tour {
 		}
 		if(index<=1&&System.currentTimeMillis()>=this.timeLimit){ return false; }//Time limit
 		int limit=length;
+//		if(index>0){
+//		int oldcut =rightCuts[index-1];
+//		oldcut=oldcut;
+//		int oldcutvert=tour.getVertice(oldcut);
+//		int kNear=Math.min(20, length);
+//		}
+//		
 		boolean improved=false;
-		if(!first){
-		int oldcut =rightCuts[index-1];
-		oldcut=oldcut;
-		int oldcutvert=tour.getVertice(oldcut);
-		int kNear=Math.min(20, length);
-	
 		for(int iters=0; iters<limit; iters++){
-			//			int toVertice=se.getXNeighbor(oldcutvert, iters);
-
+//			int toVertice=se.getXNeighbor(oldcutvert, iters);
+			
 			rightCuts[index]=i;
 			if(checkOptimization(rightCuts,index)){
-
-				improved = kopt3(kswap,rightCuts, Help.mod2(i+2, tour.length()), length-iters-2,k-1, index+1, false) 
-						|| improved;
-
-			}
-
-
-			i=Help.circleIncrement(i, tour.length());
-		}
-		}else{
-			//		
-			for(int iters=0; iters<limit; iters++){
-				//			int toVertice=se.getXNeighbor(oldcutvert, iters);
-
-				rightCuts[index]=i;
-				if(checkOptimization(rightCuts,index)){
-					if(first){
-						improved = kopt3(kswap,rightCuts, Help.mod2(i+2, tour.length()), length-3,k-1, index+1, false) 
-								|| improved;
-					} 
+				if(first){
+					improved = kopt3(kswap,rightCuts, Help.mod2(i+2, tour.length()), length-3,k-1, index+1, false) 
+							|| improved;
+				} else {
+					improved = kopt3(kswap,rightCuts, Help.mod2(i+2, tour.length()), length-iters-2,k-1, index+1, false) 
+							|| improved;
 				}
-
-
-				i=Help.circleIncrement(i, tour.length());
 			}
+			
+			
+			i=Help.circleIncrement(i, tour.length());
 		}
 		return improved;
 	}
@@ -324,7 +311,7 @@ public class TSP_Tour {
 	
 	public boolean twoOptBest(){
 		int pathLength=tour.length();
-		int k=Math.min(138, pathLength);
+		int k=Math.min(160, pathLength);
 		int innerFrom=0;
 		int innerTo=0;
 		int best=0;
