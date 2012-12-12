@@ -66,7 +66,7 @@ public class Circle {
 	 * @param index
 	 * @return
 	 */
-	public int fastMap(final int index){
+	public int unsafeMap(final int index){
 		return circleIndex(index, length);
 	}
 	

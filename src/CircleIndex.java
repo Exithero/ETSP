@@ -91,7 +91,7 @@ public class CircleIndex {
 	 * @return The new index.
 	 */
 	public int unsafeSet(final int value){
-		index=circle.fastMap(value);
+		index=circle.unsafeMap(value);
 		return index;
 	}
 	
@@ -102,6 +102,43 @@ public class CircleIndex {
 	public int get(){
 		return index;
 	}
+	
+	/**
+	 * returns (circular) index+value (without changing the internal index).
+	 * @param value
+	 * @return
+	 */
+	public int getAdd(final int value){
+		return circle.map(index+value); 
+	}
+	
+	/**
+	 * returns (circular) index+value (without changing the internal index)
+	 * but in a unsafe manner that may return an incorrect value.
+	 * Uses the circle object's unsafeMap.
+	 * @param value
+	 * @return
+	 */
+	public int unsafeGetAdd(final int value){
+		return circle.unsafeMap(index+value); 
+	}
+	
+	/**
+	 * returns the incremented index (without changing the internal index).
+	 * @return
+	 */
+	public int getIncrement(){
+		return circle.increment(index);
+	}
+	
+	/**
+	 * returns the decremented index (without changing the internal index).
+	 * @return
+	 */
+	public int getDecrement(){
+		return circle.decrement(index);
+	}
+	
 	
 	/**
 	 * returns the circle object in this circleIndex
@@ -148,7 +185,7 @@ public class CircleIndex {
 	 * @return The new index.
 	 */
 	public int unsafeAdd(final int value){
-		index=circle.fastMap(index+value);
+		index=circle.unsafeMap(index+value);
 		return index;
 	}
 	
